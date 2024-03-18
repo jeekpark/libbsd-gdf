@@ -1,6 +1,6 @@
 #pragma once
 
-#include "AssertStream.hpp"
+#include "./Assert/AssertStream.hpp"
 
 #if !defined (__clang__) && !defined (__GNUC__)
 #define __PRETTY_FUNCTION__ (__FUNCTION__)

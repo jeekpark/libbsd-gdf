@@ -5,7 +5,7 @@
 #error "This library is intended to be compiled only on a 64-bit system."
 #endif
 
-#include "types.hpp"
+#include "./Config/types.hpp"
 
 #define IN
 #define OUT
