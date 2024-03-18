@@ -10,4 +10,9 @@
 #define IN
 #define OUT
 
+#define SUCCESS true
+#define FAILURE false
+#define ERROR -1
+
+
 #endif

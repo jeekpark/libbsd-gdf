@@ -1,30 +1,13 @@
-TARGET				=	TEST
+SUBDIRS = $(filter-out %.dylib, $(wildcard lib/*/))
 
-CXX						= c++
-CXXFLAGS			=	-I./gdf/include -I./
-
-LDFLAGS				=	-L./gdf/lib -Wl,-rpath,./gdf/lib
-LDLIBS				=	-lbsd-gdf-assert -lbsd-gdf-logger
-
-FILE_DIR			:=	./
-FILE_NAME			:=	test.cpp
-
-FILE_SRCS 			:=	$(addprefix $(FILE_DIR), $(FILE_NAME))
-FILE_OBJS			:=	$(FILE_SRCS:.cpp=.o)
-
-all : $(TARGET)
-
-$(TARGET) : $(FILE_OBJS)
-	make all -C gdf
-	$(CXX) $(LDFLAGS) $(LDLIBS) $^ -o $@
-
-%.o : %.cpp
-	$(CXX) $(CXXFLAGS) -c $< -o $@
+all :
+	$(foreach subdir, $(SUBDIRS), make all -C $(subdir);)
 
 clean :
-	rm -rf $(FILE_OBJS) $(TARGET)
+	$(foreach subdir, $(SUBDIRS), make clean -C $(subdir);)
 
-re : clean
-	make all
+fclean :
+	$(foreach subdir, $(SUBDIRS), make fclean -C $(subdir);)
 
-.PHONY: all clean clangd re
+re :
+	$(foreach subdir, $(SUBDIRS), make re -C $(subdir);)
