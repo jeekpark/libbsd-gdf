@@ -1,3 +1,5 @@
 #pragma once
 
-#include "./Event/Event.hpp"
+#include <BSD-GDF/Event/KernelQueue.hpp>
+#include <BSD-GDF/Event/KernelEvent.hpp>
+

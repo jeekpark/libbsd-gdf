@@ -17,35 +17,38 @@
 #include <unistd.h>
 #include <sys/event.h>
 
-#include "../Config.hpp"
+#include <BSD-GDF/Config.hpp>
 #include <BSD-GDF/Logger.hpp>
 
 namespace gdf
 {
 
-class Event
+class KernelEvent;
+
+class KernelQueue
 {
 public:
-    Event();
-    ~Event();
+    KernelQueue();
+    virtual ~KernelQueue();
 
     bool Init();
     bool AddReadEvent(const int32 fd);
     bool AddWriteEvent(const int32 fd);
-    const struct kevent* GetEventList();
-    int32 GetEventCount() const;
+    
+    bool Poll(KernelEvent& event);
     void SetTimeout(const int64 ms);
 private:
-    Event(const Event& event); // = delete
-    const Event& operator=(const Event& event); // = delete
+    KernelQueue(const KernelQueue& event); // = delete
+    const KernelQueue& operator=(const KernelQueue& event); // = delete
     
     bool createKqueue();
-
+    const struct kevent* getEventList();
 private:
-    const int32 MAX_KEVENT_SIZE;
+    enum { MAX_KEVENT_SIZE = 128 };
     int32 mKqueue;
     struct kevent* mEventList;
     int32 mEventCount;
+    int32 mEventIndex;
     struct timespec mTimeout;
 };
  
