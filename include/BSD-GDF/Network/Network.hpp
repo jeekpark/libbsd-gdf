@@ -21,21 +21,21 @@ public:
     Network();
     ~Network();
 
-    bool Init(const int32 port);
+    bool Init(const int32 IN port);
     int32 ConnectNewClient();
-    void RecvFromClient(const int32 socket);
-    void SendToClient(const int32 socket);
+    void RecvFromClient(const int32 IN socket);
+    void SendToClient(const int32 IN socket);
 
     int32 GetServerSocket() const;
-    const char* GetIPString(const int32 socket) const;
-    void ClearReceiveBuffer(const int32 socket);
-    void ClearSendBuffer(const int32 socket);
+    const char* GetIPString(const int32 IN socket) const;
+    void ClearReceiveBuffer(const int32 IN socket);
+    void ClearSendBuffer(const int32 IN socket);
 private:
     Network(const Network& Network); // = delete
     const Network& operator=(const Network& Network); // = delete
 
     bool createServerSocket();
-    bool setServerSocket(const int32 port);
+    bool setServerSocket(const int32 IN port);
 
 private:
     enum eBufferSize

@@ -15,7 +15,7 @@ Network::~Network()
     mSessions.clear();
 }
 
-bool Network::Init(const int32 port)
+bool Network::Init(const int32 IN port)
 {
     if (createServerSocket() == FAILURE)
     {
@@ -58,7 +58,7 @@ int32 Network::ConnectNewClient()
     return clientSocket;
 }
 
-void Network::RecvFromClient(const int32 socket)
+void Network::RecvFromClient(const int32 IN socket)
 {
     // client로부터 메세지 수신 시도
     struct Session& session = mSessions[socket];
@@ -86,7 +86,7 @@ void Network::RecvFromClient(const int32 socket)
         << std::strlen(session.recvBuffer) << "bytes\n" << session.recvBuffer;
 }
 
-void Network::SendToClient(const int32 socket)
+void Network::SendToClient(const int32 IN socket)
 {
     struct Session& session = mSessions[socket];
     int sendLen = send(socket, session.sendBuffer, std::strlen(session.sendBuffer), 0);
@@ -111,7 +111,7 @@ int32 Network::GetServerSocket() const
     return mServerSocket;
 }
 
-const char* Network::GetIPString(const int32 socket) const
+const char* Network::GetIPString(const int32 IN socket) const
 {
     if (mSessions.find(socket) != mSessions.end())
     {
@@ -120,7 +120,7 @@ const char* Network::GetIPString(const int32 socket) const
     return "Unknown client(doesn't have session))";
 }
 
-void Network::ClearReceiveBuffer(const int32 socket)
+void Network::ClearReceiveBuffer(const int32 IN socket)
 {
     std::map<int, struct Session>::iterator pair = mSessions.find(socket);
     if (pair != mSessions.end())
@@ -130,7 +130,7 @@ void Network::ClearReceiveBuffer(const int32 socket)
     }
 }
 
-void Network::ClearSendBuffer(const int32 socket)
+void Network::ClearSendBuffer(const int32 IN socket)
 {
     std::map<int, struct Session>::iterator pair = mSessions.find(socket);
     if (pair != mSessions.end())
@@ -152,7 +152,7 @@ bool Network::createServerSocket()
     return SUCCESS;
 }
 
-bool Network::setServerSocket(const int32 port)
+bool Network::setServerSocket(const int32 IN port)
 {
     int32 reuseOption = 1; // socket 사용 후, 다시 사용하기 까지의 delay 제거(개발자 테스트 편의용)
     int32 keepaliveOption = 1; // 상대방과 연결이 끊어졌는지 60초마다 확인 (TCP 연결 2시간 뒤부터 keepalive 메세지 전송 시작)
