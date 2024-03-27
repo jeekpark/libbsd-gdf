@@ -1,4 +1,5 @@
 #include "../../include/BSD-GDF/Network/Network.hpp"
+#include "BSD-GDF/Config/types.hpp"
 
 namespace gdf
 {
@@ -51,10 +52,12 @@ int32 Network::ConnectNewClient()
         return ERROR;
     }
     // client session 추가
-    Session client;
-    client.addr = clientAddr;
-    client.socket = clientSocket;
-    mSessions[clientSocket] = client;
+    mSessions[clientSocket].addr = clientAddr;
+    mSessions[clientSocket].socket = clientSocket;
+    mSessions[clientSocket].sendBufferRemain = false;
+    mSessions[clientSocket].sendBufferIndex = 0;
+    mSessions[clientSocket].recvSize = 0;
+    mSessions[clientSocket].sendBuffer.reserve(1024);
     return clientSocket;
 }
 
@@ -82,14 +85,34 @@ void Network::RecvFromClient(const int32 IN socket)
     }
     // 메시지 수신 완료
     session.recvSize = recvLen;
+    session.recvBuffer[recvLen] = '\0';
     LOG(LogLevel::Notice) << "Received message from client(" << GetIPString(socket) << ") "
         << std::strlen(session.recvBuffer) << "bytes\n" << session.recvBuffer;
+}
+
+void Network::FetchToSendBuffer(const int32 IN socket, const std::string& IN buf)
+{
+    struct Session& session = mSessions[socket];
+    session.sendBuffer.erase(0, session.sendBufferIndex);
+    session.sendBufferIndex = 0;
+    session.sendBuffer += buf;
+    session.sendBufferRemain = true;
+    
 }
 
 void Network::SendToClient(const int32 IN socket)
 {
     struct Session& session = mSessions[socket];
-    int sendLen = send(socket, session.sendBuffer, std::strlen(session.sendBuffer), 0);
+    if (session.sendBufferRemain == false)
+    {
+        return ;
+    }
+    const char* c_sendBuffer = session.sendBuffer.c_str();
+    uint64 remainLen = std::strlen(c_sendBuffer + session.sendBufferIndex);
+    int sendLen = send(socket,
+                       c_sendBuffer + session.sendBufferIndex,
+                       remainLen,
+                       0);
     // 오류 발생시
     if (sendLen == -1)
     {
@@ -100,10 +123,15 @@ void Network::SendToClient(const int32 IN socket)
         return;
     }
     // 메세지 전송 완료
-    session.sendSize = sendLen;
+    session.sendBufferIndex += static_cast<uint64>(sendLen);
+    if (sendLen == remainLen)
+    {
+        session.sendBufferRemain = false;
+        session.sendBufferIndex = 0;
+        session.sendBuffer.clear();
+    }
     LOG(LogLevel::Notice) << "Sent message to client(" << GetIPString(socket) << ") "
         << sendLen << "bytes";
-    ClearSendBuffer(socket);
 }
 
 int32 Network::GetServerSocket() const
@@ -111,33 +139,17 @@ int32 Network::GetServerSocket() const
     return mServerSocket;
 }
 
-const char* Network::GetIPString(const int32 IN socket) const
+std::string Network::GetIPString(const int32 IN socket) const
 {
+    if (socket == GetServerSocket())
+    {
+        return mServerIPString;
+    }
     if (mSessions.find(socket) != mSessions.end())
     {
         return inet_ntoa(mSessions.at(socket).addr.sin_addr);
     }
     return "Unknown client(doesn't have session))";
-}
-
-void Network::ClearReceiveBuffer(const int32 IN socket)
-{
-    std::map<int, struct Session>::iterator pair = mSessions.find(socket);
-    if (pair != mSessions.end())
-    {
-        std::memset(pair->second.recvBuffer, 0, sizeof(pair->second.recvBuffer));
-        pair->second.recvSize = 0;
-    }
-}
-
-void Network::ClearSendBuffer(const int32 IN socket)
-{
-    std::map<int, struct Session>::iterator pair = mSessions.find(socket);
-    if (pair != mSessions.end())
-    {
-        std::memset(pair->second.sendBuffer, 0, sizeof(pair->second.sendBuffer));
-        pair->second.sendSize = 0;
-    }
 }
 
 bool Network::createServerSocket()
@@ -180,6 +192,7 @@ bool Network::setServerSocket(const int32 IN port)
     serverAddress.sin_family = AF_INET;
     serverAddress.sin_addr.s_addr = htonl(INADDR_ANY);
     serverAddress.sin_port = htons(port);
+    mServerIPString = inet_ntoa(serverAddress.sin_addr);
     if (bind(mServerSocket, (sockaddr*)&serverAddress, sizeof(serverAddress)) == ERROR)
     {
         LOG(LogLevel::Error) << "Failed to bind server socket "
