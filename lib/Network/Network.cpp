@@ -124,7 +124,7 @@ void Network::SendToClient(const int32 IN socket)
     }
     // 메세지 전송 완료
     session.sendBufferIndex += static_cast<uint64>(sendLen);
-    if (sendLen == remainLen)
+    if (static_cast<uint64>(sendLen) == remainLen)
     {
         session.sendBufferRemain = false;
         session.sendBufferIndex = 0;
