@@ -1,5 +1,8 @@
 #include "../../include/BSD-GDF/Network/Network.hpp"
+#include "BSD-GDF/Config.hpp"
 #include "BSD-GDF/Config/types.hpp"
+#include <netdb.h>
+#include <unistd.h>
 
 namespace gdf
 {
@@ -192,7 +195,21 @@ bool Network::setServerSocket(const int32 IN port)
     serverAddress.sin_family = AF_INET;
     serverAddress.sin_addr.s_addr = htonl(INADDR_ANY);
     serverAddress.sin_port = htons(port);
-    mServerIPString = inet_ntoa(serverAddress.sin_addr);
+    // server local network IP 저장
+    char hostbuffer[256];
+    struct hostent* hostEntry;
+    int hostname;
+    hostname = gethostname(hostbuffer, sizeof(hostbuffer));
+    if (hostname == -1)
+    {
+        return FAILURE;
+    }
+    hostEntry = gethostbyname(hostbuffer);
+    if (hostEntry == NULL)
+    {
+        return FAILURE;
+    }
+    mServerIPString = inet_ntoa(*((struct in_addr*) hostEntry->h_addr_list[0]));
     if (bind(mServerSocket, (sockaddr*)&serverAddress, sizeof(serverAddress)) == ERROR)
     {
         LOG(LogLevel::Error) << "Failed to bind server socket "
