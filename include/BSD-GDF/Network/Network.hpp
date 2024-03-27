@@ -23,13 +23,12 @@ public:
 
     bool Init(const int32 IN port);
     int32 ConnectNewClient();
-    void RecvFromClient(const int32 IN socket);
-    void SendToClient(const int32 IN socket);
-
+    bool RecvFromClient(const int32 IN socket);
+    bool SendToClient(const int32 IN socket);
+    void FetchToSendBuffer(const int32 IN socket, const std::string& IN buf);
+    bool PullFromRecvBuffer(const int32 IN socket, std::string& OUT buf, const std::string& endString = "\0");
     int32 GetServerSocket() const;
-    const char* GetIPString(const int32 IN socket) const;
-    void ClearReceiveBuffer(const int32 IN socket);
-    void ClearSendBuffer(const int32 IN socket);
+    const std::string GetIPString(const int32 IN socket) const;
 private:
     Network(const Network& Network); // = delete
     const Network& operator=(const Network& Network); // = delete
@@ -38,23 +37,19 @@ private:
     bool setServerSocket(const int32 IN port);
 
 private:
-    enum eBufferSize
-    {
-        RecvBufferSize = 1024,
-        SendBufferSize = 1024,
-    };
+    enum { RECV_BUFFER_SIZE = 1024 };
     struct Session
     {
         sockaddr_in addr;
         int32 socket;
-        char hostName[NI_MAXHOST];
-        char recvBuffer[RecvBufferSize];
-        char sendBuffer[SendBufferSize];
-        int64 recvSize;
-        int64 sendSize;
+        std::string recvBuffer;
+        std::string sendBuffer;
+        uint64 sendBufferIndex;
+        bool sendBufferRemain;
     };
 private:
     int32 mServerSocket;
+    std::string mServerIPString;
     std::map<int32, struct Session> mSessions;
 };
 
