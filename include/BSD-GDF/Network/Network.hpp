@@ -17,6 +17,18 @@ namespace gdf
 
 class Network
 {
+private:
+    enum { RECV_BUFFER_SIZE = 1024 };
+    struct Session
+    {
+        sockaddr_in addr;
+        int32 socket;
+        std::string recvBuffer;
+        std::string sendBuffer;
+        uint64 sendBufferIndex;
+        bool sendBufferRemain;
+    };
+
 public:
     Network();
     ~Network();
@@ -30,6 +42,7 @@ public:
     bool PullFromRecvBuffer(const int32 IN socket, std::string& OUT buf, const std::string& endString = "\0");
     int32 GetServerSocket() const;
     const std::string GetIPString(const int32 IN socket) const;
+    const struct Session& GetSession(const int32 IN socket) const;
 private:
     Network(const Network& Network); // = delete
     const Network& operator=(const Network& Network); // = delete
@@ -37,17 +50,6 @@ private:
     bool createServerSocket();
     bool setServerSocket(const int32 IN port);
 
-private:
-    enum { RECV_BUFFER_SIZE = 1024 };
-    struct Session
-    {
-        sockaddr_in addr;
-        int32 socket;
-        std::string recvBuffer;
-        std::string sendBuffer;
-        uint64 sendBufferIndex;
-        bool sendBufferRemain;
-    };
 private:
     int32 mServerSocket;
     std::string mServerIPString;

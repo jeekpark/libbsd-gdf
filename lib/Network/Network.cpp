@@ -188,6 +188,11 @@ const std::string Network::GetIPString(const int32 IN socket) const
     return "Unknown client(doesn't have session))";
 }
 
+const Network::Session& Network::GetSession(const int32 IN socket) const
+{
+    return mSessions.at(socket);
+}
+
 bool Network::createServerSocket()
 {
     mServerSocket = socket(AF_INET, SOCK_STREAM, 0);
