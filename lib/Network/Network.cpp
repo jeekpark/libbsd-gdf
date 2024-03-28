@@ -101,40 +101,6 @@ bool Network::RecvFromClient(const int32 IN socket)
     return SUCCESS;
 }
 
-void Network::FetchToSendBuffer(const int32 IN socket, const std::string& IN buf)
-{
-    struct Session& session = mSessions[socket];
-    session.sendBuffer.erase(0, session.sendBufferIndex);
-    session.sendBufferIndex = 0;
-    session.sendBuffer += buf;
-    session.sendBufferRemain = true;
-}
-
-bool Network::PullFromRecvBuffer(const int32 IN socket, std::string& OUT buf, const std::string& IN endString)
-{
-    if (endString == "\0")
-    {
-        if (mSessions[socket].recvBuffer.size() == 0)
-        {
-            return false;
-        }
-        else
-        {
-            buf = mSessions[socket].recvBuffer;
-            mSessions[socket].recvBuffer.clear();
-            return true;
-        }
-    }
-    const std::size_t subStrLen = mSessions[socket].recvBuffer.find(endString);
-    if (subStrLen == std::string::npos)
-    {
-        return false;
-    }
-    buf = mSessions[socket].recvBuffer.substr(0, subStrLen);
-    mSessions[socket].recvBuffer.erase(0, subStrLen + endString.size());
-    return true;
-}
-
 bool Network::SendToClient(const int32 IN socket)
 {
     struct Session& session = mSessions[socket];
@@ -168,6 +134,40 @@ bool Network::SendToClient(const int32 IN socket)
     LOG(LogLevel::Notice) << "Sent message to client(" << GetIPString(socket) << ") "
         << sendLen << "bytes";
     return SUCCESS;
+}
+
+void Network::FetchToSendBuffer(const int32 IN socket, const std::string& IN buf)
+{
+    struct Session& session = mSessions[socket];
+    session.sendBuffer.erase(0, session.sendBufferIndex);
+    session.sendBufferIndex = 0;
+    session.sendBuffer += buf;
+    session.sendBufferRemain = true;
+}
+
+bool Network::PullFromRecvBuffer(const int32 IN socket, std::string& OUT buf, const std::string& IN endString)
+{
+    if (endString == "\0")
+    {
+        if (mSessions[socket].recvBuffer.size() == 0)
+        {
+            return false;
+        }
+        else
+        {
+            buf = mSessions[socket].recvBuffer;
+            mSessions[socket].recvBuffer.clear();
+            return true;
+        }
+    }
+    const std::size_t subStrLen = mSessions[socket].recvBuffer.find(endString);
+    if (subStrLen == std::string::npos)
+    {
+        return false;
+    }
+    buf = mSessions[socket].recvBuffer.substr(0, subStrLen);
+    mSessions[socket].recvBuffer.erase(0, subStrLen + endString.size());
+    return true;
 }
 
 int32 Network::GetServerSocket() const
