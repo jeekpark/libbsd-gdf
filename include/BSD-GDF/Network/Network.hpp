@@ -23,6 +23,7 @@ public:
 
     bool Init(const int32 IN port);
     int32 ConnectNewClient();
+    void DisconnectClient(const int32 IN socket);
     bool RecvFromClient(const int32 IN socket);
     bool SendToClient(const int32 IN socket);
     void FetchToSendBuffer(const int32 IN socket, const std::string& IN buf);

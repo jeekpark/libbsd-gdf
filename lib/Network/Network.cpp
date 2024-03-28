@@ -64,6 +64,12 @@ int32 Network::ConnectNewClient()
     return clientSocket;
 }
 
+void Network::DisconnectClient(const int32 IN socket)
+{
+    close(socket);
+    mSessions.erase(socket);
+}
+
 bool Network::RecvFromClient(const int32 IN socket)
 {
     // client로부터 메세지 수신 시도
