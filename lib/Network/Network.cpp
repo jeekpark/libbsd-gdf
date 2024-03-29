@@ -66,6 +66,7 @@ int32 Network::ConnectNewClient()
 
 void Network::DisconnectClient(const int32 IN socket)
 {
+    LOG(LogLevel::Notice) << "Client(IP: " << GetIPString(socket) << ") disconnected";
     close(socket);
     mSessions.erase(socket);
 }
@@ -131,7 +132,7 @@ bool Network::SendToClient(const int32 IN socket)
         session.sendBufferIndex = 0;
         session.sendBuffer.clear();
     }
-    LOG(LogLevel::Notice) << "Sent message to client(" << GetIPString(socket) << ") "
+    LOG(LogLevel::Debug) << "Sent message to client(" << GetIPString(socket) << ") "
         << sendLen << "bytes";
     return SUCCESS;
 }
@@ -168,6 +169,19 @@ bool Network::PullFromRecvBuffer(const int32 IN socket, std::string& OUT buf, co
     buf = mSessions[socket].recvBuffer.substr(0, subStrLen);
     mSessions[socket].recvBuffer.erase(0, subStrLen + endString.size());
     return true;
+}
+
+void Network::ClearRecvBuffer(const int32 IN socket)
+{
+    Session& session =  mSessions[socket];
+    session.recvBuffer.clear();
+}
+void Network::ClearSendBuffer(const int32 IN socket)
+{
+    Session& session =  mSessions[socket];
+    session.sendBuffer.clear();
+    session.sendBufferIndex = 0;
+    session.sendBufferRemain = false;
 }
 
 int32 Network::GetServerSocket() const

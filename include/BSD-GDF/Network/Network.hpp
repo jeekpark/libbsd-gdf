@@ -40,6 +40,8 @@ public:
     bool SendToClient(const int32 IN socket);
     void FetchToSendBuffer(const int32 IN socket, const std::string& IN buf);
     bool PullFromRecvBuffer(const int32 IN socket, std::string& OUT buf, const std::string& endString = "\0");
+    void ClearRecvBuffer(const int32 IN socket);
+    void ClearSendBuffer(const int32 IN socket);
     int32 GetServerSocket() const;
     const std::string GetIPString(const int32 IN socket) const;
     const struct Session& GetSession(const int32 IN socket) const;
