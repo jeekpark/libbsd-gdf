@@ -21,8 +21,9 @@ DisplayConsole::DisplayConsole(const std::string& IN header,
     mANSIColors[DisplayBuffer::Red] = "\033[31m";
     mANSIColors[DisplayBuffer::Green] = "\033[32m";
     mANSIColors[DisplayBuffer::BrightBlue] = "\033[34;1m";
-    mANSIColors[DisplayBuffer::WhiteCharBlueBG] = "\033[44;37m";
     mANSIColors[DisplayBuffer::WhiteCharRedBG] = "\033[41;37m";
+    mANSIColors[DisplayBuffer::WhiteCharBlueBG] = "\033[44;37m";
+    mANSIColors[DisplayBuffer::WriteCharGrayBG] = "\033[100;90m";
     mDisplay.SetHeader(header);
     mDisplay.SetFooter(footer);
     mHeaderColor = mANSIColors[headerColor];

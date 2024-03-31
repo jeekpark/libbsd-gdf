@@ -21,8 +21,9 @@ public:
         Red,
         Green,
         BrightBlue,
+        WhiteCharRedBG,
         WhiteCharBlueBG,
-        WhiteCharRedBG
+        WriteCharGrayBG
     };
     struct Content
     {
