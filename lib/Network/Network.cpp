@@ -126,6 +126,9 @@ bool Network::SendToClient(const int32 IN socket)
         return FAILURE;
     }
     // 메세지 전송 완료
+    LOG(LogLevel::Notice) << "Sent message to client(" << GetIPString(socket) << ") "
+        << sendLen << "bytes\n" << c_sendBuffer + session.sendBufferIndex;
+
     session.sendBufferIndex += static_cast<uint64>(sendLen);
     if (static_cast<uint64>(sendLen) == remainLen)
     {
