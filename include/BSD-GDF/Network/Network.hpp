@@ -18,7 +18,6 @@ namespace gdf
 class Network
 {
 private:
-    enum { RECV_BUFFER_SIZE = 1024 };
     struct Session
     {
         sockaddr_in addr;
