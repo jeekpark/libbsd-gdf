@@ -18,6 +18,7 @@ namespace gdf
 class Network
 {
 private:
+    enum { kRecvBufferSize = 1024 };
     struct Session
     {
         sockaddr_in addr;

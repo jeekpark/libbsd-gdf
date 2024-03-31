@@ -1,6 +1,7 @@
 #include "../../include/BSD-GDF/Network/Network.hpp"
 #include "BSD-GDF/Config.hpp"
 #include "BSD-GDF/Config/types.hpp"
+#include "BSD-GDF/Logger/GlobalLogger.hpp"
 #include <netdb.h>
 #include <unistd.h>
 
@@ -75,8 +76,8 @@ bool Network::RecvFromClient(const int32 IN socket)
 {
     // client로부터 메세지 수신 시도
     struct Session& session = mSessions[socket];
-    char buffer[RECV_BUFFER_SIZE];
-    int32 recvLen = recv(socket, buffer, RECV_BUFFER_SIZE - 1, 0);
+    char buffer[kRecvBufferSize];
+    int32 recvLen = recv(socket, buffer, kRecvBufferSize - 1, 0);
     // 오류 발생시
     if (recvLen == ERROR)
     {
