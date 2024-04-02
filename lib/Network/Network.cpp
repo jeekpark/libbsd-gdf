@@ -141,7 +141,7 @@ bool Network::SendToClient(const int32 IN socket)
     return SUCCESS;
 }
 
-void Network::FetchToSendBuffer(const int32 IN socket, const std::string& IN buf)
+void Network::PushToSendBuffer(const int32 IN socket, const std::string& IN buf)
 {
     struct Session& session = mSessions[socket];
     session.sendBuffer.erase(0, session.sendBufferIndex);

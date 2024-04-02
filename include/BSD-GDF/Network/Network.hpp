@@ -38,7 +38,7 @@ public:
     void DisconnectClient(const int32 IN socket);
     bool RecvFromClient(const int32 IN socket);
     bool SendToClient(const int32 IN socket);
-    void FetchToSendBuffer(const int32 IN socket, const std::string& IN buf);
+    void PushToSendBuffer(const int32 IN socket, const std::string& IN buf);
     bool PullFromRecvBuffer(const int32 IN socket, std::string& OUT buf, const std::string& endString = "\0");
     void ClearRecvBuffer(const int32 IN socket);
     void ClearSendBuffer(const int32 IN socket);
