@@ -62,6 +62,7 @@ int32 Network::ConnectNewClient()
     mSessions[clientSocket].sendBufferRemain = false;
     mSessions[clientSocket].sendBufferIndex = 0;
     mSessions[clientSocket].sendBuffer.reserve(1024);
+    mSessions[clientSocket].isReservedDisconnect = false;
     return clientSocket;
 }
 
@@ -76,6 +77,10 @@ bool Network::RecvFromClient(const int32 IN socket)
 {
     // client로부터 메세지 수신 시도
     struct Session& session = mSessions[socket];
+    if (session.isReservedDisconnect)
+    {
+        return SUCCESS;
+    }
     char buffer[kRecvBufferSize];
     int32 recvLen = recv(socket, buffer, kRecvBufferSize - 1, 0);
     // 오류 발생시
@@ -108,6 +113,10 @@ bool Network::SendToClient(const int32 IN socket)
     struct Session& session = mSessions[socket];
     if (session.sendBufferRemain == false)
     {
+        if (session.isReservedDisconnect)
+        {
+            DisconnectClient(socket);
+        }
         return SUCCESS;
     }
     const char* c_sendBuffer = session.sendBuffer.c_str();
@@ -173,6 +182,11 @@ bool Network::PullFromRecvBuffer(const int32 IN socket, std::string& OUT buf, co
     buf = mSessions[socket].recvBuffer.substr(0, subStrLen);
     mSessions[socket].recvBuffer.erase(0, subStrLen + endString.size());
     return true;
+}
+
+void Network::ReserveDisconnectClient(const int32 IN socket)
+{
+    mSessions[socket].isReservedDisconnect = true;
 }
 
 void Network::ClearRecvBuffer(const int32 IN socket)

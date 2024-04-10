@@ -27,6 +27,7 @@ private:
         std::string sendBuffer;
         uint64 sendBufferIndex;
         bool sendBufferRemain;
+        bool isReservedDisconnect;
     };
 
 public:
@@ -40,6 +41,7 @@ public:
     bool SendToClient(const int32 IN socket);
     void PushToSendBuffer(const int32 IN socket, const std::string& IN buf);
     bool PullFromRecvBuffer(const int32 IN socket, std::string& OUT buf, const std::string& endString = "\0");
+    void ReserveDisconnectClient(const int32 IN socket);
     void ClearRecvBuffer(const int32 IN socket);
     void ClearSendBuffer(const int32 IN socket);
     int32 GetServerSocket() const;
