@@ -1,11 +1,11 @@
-NAME				:=	../libbsd-gdf-event.dylib
+NAME				:=	../../../lib/libbsd-gdf-network.dylib
 CXX					:=	c++
-CXXFLAGS			:=	-Wall -Wextra -Werror -std=c++98 -I../../include
-LDFLAGS				:=	-dynamiclib -install_name '@rpath/libbsd-gdf-event.dylib' -L../../lib -Wl,-rpath,../../lib
+CXXFLAGS			:=	-Wall -Wextra -Werror -std=c++98 -I../../../include
+LDFLAGS				:=	-dynamiclib -install_name '@rpath/libbsd-gdf-network.dylib' -L../../../lib -Wl,-rpath,../../../lib
 LDLIBS				:=	-lbsd-gdf-logger
 
 FILE_DIR			:=	./
-FILE_NAME			:=	KernelQueue.cpp KernelEvent.cpp
+FILE_NAME			:=	Network.cpp
 
 FILE_SRCS 			:=	$(addprefix $(FILE_DIR), $(FILE_NAME))
 FILE_OBJS			:=	$(FILE_SRCS:.cpp=.o)

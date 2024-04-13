@@ -1,6 +1,6 @@
-NAME				:=	../libbsd-gdf-display.dylib
+NAME				:=	../../../lib/libbsd-gdf-display.dylib
 CXX					:=	c++
-CXXFLAGS			:=	-Wall -Wextra -Werror -std=c++98
+CXXFLAGS			:=	-Wall -Wextra -Werror -std=c++98 -I../../../include
 LDFLAGS				:=	-dynamiclib -install_name '@rpath/libbsd-gdf-display.dylib'
 
 

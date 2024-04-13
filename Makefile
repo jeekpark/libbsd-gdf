@@ -1,7 +1,8 @@
-SUPER_SUBDIRS = lib/Assert/ lib/Logger/
-SUBDIRS = $(filter-out $(SUPER_SUBDIRS) %.dylib, $(wildcard lib/*/))
+SUPER_SUBDIRS = src/BSD-GDF/Assert/ src/BSD-GDF/Logger/
+SUBDIRS = $(filter-out $(SUPER_SUBDIRS) %.dylib, $(wildcard src/BSD-GDF/*/))
 
 all :
+	mkdir -p lib
 	$(foreach subdir, $(SUPER_SUBDIRS), $(MAKE) all -C $(subdir);)
 	$(foreach subdir, $(SUBDIRS), $(MAKE) all -C $(subdir);)
 
@@ -19,4 +20,4 @@ re :
 
 clangd :
 	echo "CompileFlags:" > .clangd
-	echo "  Add: [-I$(PWD)/include, -std=c++98]" >> .clangd
+	echo "  Add: [-I$(PWD)/include, -I$(PWD)/src, -std=c++98]" >> .clangd

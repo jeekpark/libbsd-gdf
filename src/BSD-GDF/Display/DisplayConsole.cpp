@@ -1,4 +1,4 @@
-#include "../../include/BSD-GDF/Display/DisplayConsole.hpp"
+#include "BSD-GDF/Display/DisplayConsole.hpp"
 
 namespace gdf
 {

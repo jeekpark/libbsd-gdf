@@ -1,9 +1,4 @@
-#include "../../include/BSD-GDF/Network/Network.hpp"
-#include "BSD-GDF/Config.hpp"
-#include "BSD-GDF/Config/types.hpp"
-#include "BSD-GDF/Logger/GlobalLogger.hpp"
-#include <netdb.h>
-#include <unistd.h>
+#include "BSD-GDF/Network/Network.hpp"
 
 namespace gdf
 {

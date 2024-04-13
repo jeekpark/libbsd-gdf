@@ -11,6 +11,7 @@
 
 #pragma once
 
+#include <sys/event.h>
 #include <BSD-GDF/Config.hpp>
 
 namespace gdf

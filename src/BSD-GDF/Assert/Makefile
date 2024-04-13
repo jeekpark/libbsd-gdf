@@ -1,11 +1,11 @@
-NAME				:=	../libbsd-gdf-logger.dylib
+NAME				:=	../../../lib/libbsd-gdf-assert.dylib
 CXX					:=	c++
-CXXFLAGS			:=	-Wall -Wextra -Werror -std=c++98
-LDFLAGS				:=	-dynamiclib -install_name '@rpath/libbsd-gdf-logger.dylib'
+CXXFLAGS			:=	-Wall -Wextra -Werror -std=c++98 -I../../../include
+LDFLAGS				:=	-dynamiclib -install_name '@rpath/libbsd-gdf-assert.dylib'
 
 
 FILE_DIR			:=	./
-FILE_NAME			:=	GlobalLogger.cpp
+FILE_NAME			:=	AssertStream.cpp
 
 FILE_SRCS 			:=	$(addprefix $(FILE_DIR), $(FILE_NAME))
 FILE_OBJS			:=	$(FILE_SRCS:.cpp=.o)

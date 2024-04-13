@@ -1,4 +1,5 @@
-#include "../../include/BSD-GDF/Display/DisplayBuffer.hpp"
+#include "BSD-GDF/Display/DisplayBuffer.hpp"
+
 namespace gdf
 {
 

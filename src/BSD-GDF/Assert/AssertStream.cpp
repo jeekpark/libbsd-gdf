@@ -1,4 +1,4 @@
-#include "../../include/BSD-GDF/Assert/AssertStream.hpp"
+#include "BSD-GDF/Assert/AssertStream.hpp"
 
 namespace gdf
 {

@@ -1,6 +1,6 @@
-#include <BSD-GDF/Event/KernelQueue.hpp>
+#include "BSD-GDF/Event/KernelQueue.hpp"
 
-#include <BSD-GDF/Event/KernelEvent.hpp>
+#include "BSD-GDF/Event/KernelEvent.hpp"
 
 namespace gdf
 {

@@ -1,6 +1,4 @@
-#include <BSD-GDF/Event/KernelEvent.hpp>
-
-#include <sys/event.h>
+#include "BSD-GDF/Event/KernelEvent.hpp"
 
 namespace gdf
 {
